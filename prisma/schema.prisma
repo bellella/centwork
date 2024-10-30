@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Message {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  message    String
+  ip         String
+  createdAt  DateTime @default(now())
+  roomId     String
+}
+
+model MessageRoom {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  number     Int
+  backgroundImage String
+  status     Status
+  createdAt  DateTime @default(now())
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
