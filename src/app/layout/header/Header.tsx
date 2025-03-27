@@ -33,7 +33,7 @@ const Header = ({toggleMobileSidebar}: ItemType) => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        {/* <IconButton
+        <IconButton
           color="inherit"
           aria-label="menu"
           onClick={toggleMobileSidebar}
@@ -62,11 +62,11 @@ const Header = ({toggleMobileSidebar}: ItemType) => {
         </IconButton>
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
-          <Button variant="contained" component={Link} href="/authentication/login"   disableElevation color="primary" >
+          <Button variant="contained" component={Link} href="/login"   disableElevation color="primary" >
             Login
           </Button>
           <Profile />
-        </Stack> */}
+        </Stack>
       </ToolbarStyled>
     </AppBarStyled>
   );

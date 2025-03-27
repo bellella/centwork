@@ -13,13 +13,13 @@ import { uniqueId } from "lodash";
 const Menuitems = [
   {
     navlabel: true,
-    subheader: "test",
+    subheader: "Products",
   },
   {
     id: uniqueId(),
-    title: "Jobs",
+    title: "Products",
     icon: IconLayoutDashboard,
-    href: "/jobs",
+    href: "/products",
   },
   {
     navlabel: true,

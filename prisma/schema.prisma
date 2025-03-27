@@ -7,24 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Message {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  message    String
-  ip         String
-  createdAt  DateTime @default(now())
-  roomId     String
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+
+  products  Product[]
 }
 
-model MessageRoom {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  number     Int
-  backgroundImage String
-  status     Status
-  createdAt  DateTime @default(now())
-}
-
-enum Status {
-  ACTIVE
-  INACTIVE
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  price       Int
+  image       String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
 }
