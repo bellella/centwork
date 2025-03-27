@@ -119,7 +119,7 @@ export default function LoginPage() {
 
               <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
                 <Typography color="textSecondary" variant="body2">
-                  Don't have an account?
+                  Dont have an account?
                 </Typography>
                 <Link href="/signup" style={{ textDecoration: "none" }}>
                   <Typography color="primary" variant="body2">

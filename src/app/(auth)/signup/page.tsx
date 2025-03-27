@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import {
   Box,
   Grid,
@@ -100,7 +100,7 @@ export default function SignUpPage() {
                     variant="outlined"
                     fullWidth
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setName(e.target.value)}
                   />
 
                   <Typography
