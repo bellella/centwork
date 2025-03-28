@@ -18,7 +18,6 @@ export function getProductById(id: string): Promise<
     where: { id },
     include: {
       user: true,
-      reservations: true,
     },
   });
 }
@@ -45,4 +44,19 @@ export function createProduct(data: {
   userId: string;
 }) {
   return prisma.product.create({ data });
+}
+
+export function updateProduct(
+  id: string,
+  data: {
+    title: string;
+    description: string;
+    price: number;
+    image?: string;
+  }
+) {
+  return prisma.product.update({
+    where: { id },
+    data,
+  });
 }
