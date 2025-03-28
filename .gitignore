@@ -34,12 +34,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# 환경 변수 파일
+# env
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# 코드 히스토리 폴더
-.history
+# IDE
+.history/*
+.idea/*
