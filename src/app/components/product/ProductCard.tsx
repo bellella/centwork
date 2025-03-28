@@ -1,17 +1,22 @@
 import { Product } from "@prisma/client";
 import Link from "next/link";
-import {
-  Avatar,
-  CardContent,
-  Rating,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, CardContent, Rating, Stack, Typography } from "@mui/material";
 import BlankCard from "../shared/BlankCard";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  product,
+  isMyProducts,
+}: {
+  product: Product;
+  isMyProducts: boolean;
+}) {
   return (
-    <Link href={`/products/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+    <Link
+      href={
+        isMyProducts ? `/myProducts/${product.id}` : `/products/${product.id}`
+      }
+      style={{ textDecoration: "none", color: "inherit" }}
+    >
       <BlankCard>
         <Avatar
           src={product.image ?? ""}

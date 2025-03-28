@@ -13,7 +13,7 @@ import {
     ListItemText,
     Typography,
 } from "@mui/material";
-import { IconUser } from "@tabler/icons-react";
+import { IconUser, IconClipboardData } from "@tabler/icons-react";
 import { useSession, signOut } from "next-auth/react";
 
 const Profile = () => {
@@ -82,6 +82,17 @@ const Profile = () => {
                             <IconUser width={20} />
                         </ListItemIcon>
                         <ListItemText>MyPage</ListItemText>
+                    </MenuItem>
+                </Link>
+                <Link
+                    href="/myProducts"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                >
+                    <MenuItem>
+                        <ListItemIcon>
+                            <IconClipboardData width={20} />
+                        </ListItemIcon>
+                        <ListItemText>My Products</ListItemText>
                     </MenuItem>
                 </Link>
 

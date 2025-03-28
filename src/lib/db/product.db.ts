@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import {Product, Reservation, User } from "@prisma/client";
+import { Product, Reservation, User } from "@prisma/client";
 
 export function getProducts() {
   return prisma.product.findMany({
@@ -7,10 +7,13 @@ export function getProducts() {
   });
 }
 
-export function getProductById(id: string): Promise<(Product & {
-  user: User;
-  reservations: Reservation[];
-}) | null> {
+export function getProductById(id: string): Promise<
+  | (Product & {
+      user: User;
+      reservations: Reservation[];
+    })
+  | null
+> {
   return prisma.product.findUnique({
     where: { id },
     include: {
@@ -18,6 +21,20 @@ export function getProductById(id: string): Promise<(Product & {
       reservations: true,
     },
   });
+}
+
+export function getProductByUserId(userId: string): Promise<Product[]> {
+  try {
+    return prisma.product.findMany({
+      where: { userId },
+      include: {
+        user: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
 }
 
 export function createProduct(data: {
