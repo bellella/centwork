@@ -73,6 +73,16 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           <Box flexGrow={1} />
 
           <Stack spacing={1} direction="row" alignItems="center">
+            {session && (
+                <Button
+                    component={Link}
+                    href="/products/new"
+                    variant="outlined"
+                    color="primary"
+                >
+                  + Add Product
+                </Button>
+            )}
             {!session && (
                 <Button
                     variant="contained"
