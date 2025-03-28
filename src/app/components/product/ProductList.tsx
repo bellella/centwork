@@ -16,7 +16,7 @@ export default function ProductList({
 }) {
   return (
     <PageContainer title="Products" description="this is Products">
-      <DashboardCard title="Products">
+      <DashboardCard title={isMyProducts ? "My Products" : "Products"}>
         <Grid container spacing={3}>
           {products.map((product, index) => (
             <Grid item xs={12} md={4} lg={3} key={index}>

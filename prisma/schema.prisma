@@ -43,8 +43,9 @@ model Reservation {
 
 enum ProductStatus {
   AVAILABLE
-  SOLD
   RESERVED
+  SOLD
+  INACTIVE
 }
 
 enum ProductCategory {

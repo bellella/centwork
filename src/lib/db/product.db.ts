@@ -63,6 +63,10 @@ export function updateProduct(
     description: string;
     price: number;
     image?: string;
+    status: ProductStatus;
+    category: ProductCategory;
+    location: string;
+    keywords: string[];
   }
 ) {
   return prisma.product.update({

@@ -9,9 +9,28 @@ export async function PUT(req: Request) {
   if (!session?.user?.["id"])
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, title, description, price, image } = await req.json();
+  const {
+    id,
+    title,
+    description,
+    price,
+    image,
+    status,
+    category,
+    location,
+    keywords,
+  } = await req.json();
 
-  const product = await updateProduct(id, { title, description, price, image });
+  const product = await updateProduct(id, {
+    title,
+    description,
+    price,
+    image,
+    status,
+    category,
+    location,
+    keywords,
+  });
 
   return NextResponse.json({ message: "Product updated", product });
 }
