@@ -1,5 +1,11 @@
 import prisma from "./prisma";
-import { Product, Reservation, User } from "@prisma/client";
+import {
+  Product,
+  Reservation,
+  User,
+  ProductCategory,
+  ProductStatus,
+} from "@prisma/client";
 
 export function getProducts() {
   return prisma.product.findMany({
@@ -42,6 +48,10 @@ export function createProduct(data: {
   price: number;
   image?: string;
   userId: string;
+  category: ProductCategory;
+  location: string;
+  keywords: string[];
+  status: ProductStatus;
 }) {
   return prisma.product.create({ data });
 }

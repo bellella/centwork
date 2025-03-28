@@ -22,6 +22,10 @@ model Product {
   description   String
   price         Int
   image         String?
+  status        ProductStatus @default(AVAILABLE)
+  category      ProductCategory
+  location      String
+  keywords      String[]
   createdAt     DateTime      @default(now())
   user          User          @relation(fields: [userId], references: [id])
   userId        String        @db.ObjectId
@@ -35,4 +39,28 @@ model Reservation {
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @db.ObjectId
   createdAt  DateTime @default(now())
+}
+
+enum ProductStatus {
+  AVAILABLE
+  SOLD
+  RESERVED
+}
+
+enum ProductCategory {
+  TEXTBOOKS
+  ELECTRONICS
+  DORM_FURNITURE
+  SCHOOL_SUPPLIES
+  CLOTHING
+  ACCESSORIES
+  SPORTS_FITNESS
+  ENTERTAINMENT
+  KITCHEN_APPLIANCES
+  BIKES_TRANSPORT
+  ROOM_DECOR
+  STUDY_MATERIALS
+  TECH_GADGETS
+  MUSICAL_INSTRUMENTS
+  OTHER
 }

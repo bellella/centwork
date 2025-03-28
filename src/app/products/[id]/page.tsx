@@ -11,8 +11,8 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
     if (!product) return notFound();
 
     const isOwner = session?.user?.id === product.userId;
-    const isReserved = product.reservations.length > 0;
-    const reservedByMe = product.reservations.some(res => res.userId === session?.user?.id);
+    const isReserved = product.reservations?.length > 0;
+    const reservedByMe = product.reservations?.some(res => res.userId === session?.user?.id);
 
     return (
         <div style={{ padding: "2rem" }}>
