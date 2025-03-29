@@ -74,3 +74,9 @@ export function updateProduct(
     data,
   });
 }
+
+export function deleteProduct(id: string) {
+  return prisma.product.delete({
+    where: { id },
+  });
+}

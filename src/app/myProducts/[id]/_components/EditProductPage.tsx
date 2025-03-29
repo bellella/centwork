@@ -30,9 +30,30 @@ export default function EditProductPage({
     const data = await res.json();
     if (res.ok) {
       alert("Product updated");
-      router.refresh();
+      router.push("/myProducts");
     } else {
       alert(data.error || "Failed to update product");
+    }
+  };
+
+  const confirmDelete = () => {
+    if (confirm("Are you sure you want to delete this product?")) {
+      handleDelete();
+    }
+  };
+
+  const handleDelete = async () => {
+    const res = await fetch(`/api/myProducts/edit`, {
+      method: "DELETE",
+      body: JSON.stringify({ id: product.id }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Product deleted");
+      router.push("/myProducts");
+    } else {
+      alert(data.error || "Failed to delete product");
     }
   };
 
@@ -162,7 +183,15 @@ export default function EditProductPage({
           />
         ))}
       </Box>
-      <Box display="flex" justifyContent="flex-end" width="100%">
+      <Box display="flex" justifyContent="flex-end" width="100%" gap={4}>
+        <Button
+          variant="contained"
+          onClick={confirmDelete}
+          sx={{ mt: 2 }}
+          color="error"
+        >
+          Delete
+        </Button>
         <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
           Update
         </Button>
