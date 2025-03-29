@@ -5,10 +5,29 @@ import {
   User,
   ProductCategory,
   ProductStatus,
+  Location,
+  Prisma,
 } from "@prisma/client";
 
-export function getProducts() {
+export function getProducts(queryObject: any) {
+  const where: Prisma.ProductWhereInput = {};
+  if (queryObject?.keyword) {
+    where.OR = [
+      { title: { contains: queryObject.keyword, mode: "insensitive" } },
+      { description: { contains: queryObject.keyword, mode: "insensitive" } },
+    ];
+  }
+
+  if (queryObject?.category) {
+    where.category = queryObject.category;
+  }
+
+  if (queryObject?.location) {
+    where.location = queryObject.location;
+  }
+
   return prisma.product.findMany({
+    where,
     orderBy: { createdAt: "desc" },
   });
 }
@@ -49,7 +68,7 @@ export function createProduct(data: {
   image?: string;
   userId: string;
   category: ProductCategory;
-  location: string;
+  location: Location;
   keywords: string[];
   status: ProductStatus;
 }) {
@@ -65,7 +84,7 @@ export function updateProduct(
     image?: string;
     status: ProductStatus;
     category: ProductCategory;
-    location: string;
+    location: Location;
     keywords: string[];
   }
 ) {

@@ -14,6 +14,8 @@ import {
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import CentennailLogo from "/public/images/logos/CentennialMarket.png";
+import Image from "next/image";
 
 // components
 import Profile from "./Profile";
@@ -42,23 +44,35 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
   }));
 
   return (
-      <AppBarStyled position="sticky" color="default">
-        <ToolbarStyled>
-          <IconButton
-              color="inherit"
-              aria-label="menu"
-              onClick={toggleMobileSidebar}
-              sx={{
-                display: {
-                  lg: "none",
-                  xs: "inline",
-                },
-              }}
-          >
-            <IconMenu width="20" height="20" />
-          </IconButton>
+    <AppBarStyled position="sticky" color="default">
+      <ToolbarStyled>
+        <Link href="/">
+          <Image
+            src={CentennailLogo}
+            alt="Centennial Market"
+            priority
+            style={{
+              width: "auto",
+              height: "auto",
+            }}
+          />
+        </Link>
 
-          <IconButton
+        <IconButton
+          color="inherit"
+          aria-label="menu"
+          onClick={toggleMobileSidebar}
+          sx={{
+            display: {
+              lg: "none",
+              xs: "inline",
+            },
+          }}
+        >
+          <IconMenu width="20" height="20" />
+        </IconButton>
+
+        {/* <IconButton
               size="large"
               aria-label="notifications"
               color="inherit"
@@ -68,36 +82,36 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
             <Badge variant="dot" color="primary">
               <IconBellRinging size="21" stroke="1.5" />
             </Badge>
-          </IconButton>
+          </IconButton> */}
 
-          <Box flexGrow={1} />
+        <Box flexGrow={1} />
 
-          <Stack spacing={1} direction="row" alignItems="center">
-            {session && (
-                <Button
-                    component={Link}
-                    href="/products/new"
-                    variant="outlined"
-                    color="primary"
-                >
-                  + Add Product
-                </Button>
-            )}
-            {!session && (
-                <Button
-                    variant="contained"
-                    component={Link}
-                    href="/login"
-                    disableElevation
-                    color="primary"
-                >
-                  Login
-                </Button>
-            )}
-            {session && <Profile />}
-          </Stack>
-        </ToolbarStyled>
-      </AppBarStyled>
+        <Stack spacing={1} direction="row" alignItems="center">
+          {session && (
+            <Button
+              component={Link}
+              href="/products/new"
+              variant="outlined"
+              color="primary"
+            >
+              + Add Product
+            </Button>
+          )}
+          {!session && (
+            <Button
+              variant="contained"
+              component={Link}
+              href="/login"
+              disableElevation
+              color="primary"
+            >
+              Login
+            </Button>
+          )}
+          {session && <Profile />}
+        </Stack>
+      </ToolbarStyled>
+    </AppBarStyled>
   );
 };
 

@@ -24,7 +24,7 @@ model Product {
   image         String?
   status        ProductStatus @default(AVAILABLE)
   category      ProductCategory
-  location      String
+  location      Location
   keywords      String[]
   createdAt     DateTime      @default(now())
   user          User          @relation(fields: [userId], references: [id])
@@ -64,4 +64,13 @@ enum ProductCategory {
   TECH_GADGETS
   MUSICAL_INSTRUMENTS
   OTHER
+}
+
+enum Location {
+  TORONTO
+  SCARBOROUGH
+  MISSISSAUGA
+  NORTH_YORK
+  ETOBICOKE
+  YORK
 }

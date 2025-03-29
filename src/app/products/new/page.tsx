@@ -10,7 +10,7 @@ import {
   MenuItem,
   Chip,
 } from "@mui/material";
-import { ProductCategory } from "@prisma/client";
+import { ProductCategory, Location } from "@prisma/client";
 
 export default function NewProductPage() {
   const [keywordInput, setKeywordInput] = useState("");
@@ -20,7 +20,7 @@ export default function NewProductPage() {
     price: 0,
     image: "",
     category: ProductCategory.OTHER,
-    location: "",
+    location: Location.TORONTO,
     keywords: [],
   } as Product);
 
@@ -103,13 +103,22 @@ export default function NewProductPage() {
         ))}
       </TextField>
       <TextField
+        select
         label="Location"
         value={product.location}
-        onChange={(e) => setProduct({ ...product, location: e.target.value })}
+        onChange={(e) =>
+          setProduct({ ...product, location: e.target.value as Location })
+        }
         fullWidth
         margin="normal"
         required
-      />
+      >
+        {Object.values(Location).map((location) => (
+          <MenuItem key={location} value={location}>
+            {location}
+          </MenuItem>
+        ))}
+      </TextField>
 
       <TextField
         label="Image URL"
@@ -174,6 +183,6 @@ type Product = {
   price: number;
   image: string;
   category: ProductCategory;
-  location: string;
+  location: Location;
   keywords: string[];
 };

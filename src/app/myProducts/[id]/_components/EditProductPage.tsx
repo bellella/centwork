@@ -8,7 +8,7 @@ import {
   MenuItem,
   Chip,
 } from "@mui/material";
-import { ProductCategory, ProductStatus } from "@prisma/client";
+import { ProductCategory, ProductStatus, Location } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -132,12 +132,21 @@ export default function EditProductPage({
         ))}
       </TextField>
       <TextField
+        select
         label="Location"
         value={product?.location}
-        onChange={(e) => setProduct({ ...product, location: e.target.value })}
+        onChange={(e) =>
+          setProduct({ ...product, location: e.target.value as Location })
+        }
         fullWidth
         margin="normal"
-      />
+      >
+        {Object.values(Location).map((location) => (
+          <MenuItem key={location} value={location}>
+            {location}
+          </MenuItem>
+        ))}
+      </TextField>
       <TextField
         label="Image URL"
         value={product?.image}
@@ -208,6 +217,6 @@ type Product = {
   image: string;
   category: ProductCategory;
   status: ProductStatus;
-  location: string;
+  location: Location;
   keywords: string[];
 };
