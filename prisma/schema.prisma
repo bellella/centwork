@@ -27,6 +27,7 @@ model Product {
   title         String
   description   String
   price         Int
+  imageName     String?
   image         String?
   status        ProductStatus @default(AVAILABLE)
   category      ProductCategory
