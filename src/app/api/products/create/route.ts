@@ -9,13 +9,14 @@ export async function POST(req: Request) {
   if (!session?.user?.["id"])
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { title, description, price, image, category, location, keywords }: Product =
+  const { title, description, price, image, imageName, category, location, keywords }: Product =
     await req.json();
   const product = await createProduct({
     title,
     description,
     price,
     image,
+    imageName,
     category,
     location,
     keywords,
