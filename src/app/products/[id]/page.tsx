@@ -3,6 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { Button } from "@mui/material";
+import ChatStartButton from "@/app/components/product/ChatStartButton";
 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
     const product = await getProductById(params.id);
@@ -23,25 +24,28 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
             <p><strong>Seller:</strong> {product.user?.name}</p>
 
             {session && !isOwner && (
-                <form action="/api/reservations/create" method="POST">
-                    <input type="hidden" name="productId" value={product.id} />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disabled={isReserved}
-                        sx={{ mt: 2 }}
-                    >
-                        {isReserved ? "Already Reserved" : "Reserve"}
-                    </Button>
-                </form>
+                <>
+                    <form action="/api/reservations/create" method="POST">
+                        <input type="hidden" name="productId" value={product.id}/>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={isReserved}
+                            sx={{mt: 2}}
+                        >
+                            {isReserved ? "Already Reserved" : "Reserve"}
+                        </Button>
+                    </form>
+                    <ChatStartButton productId={product.id} sellerId={product.userId} />
+                </>
             )}
 
             {session && isOwner && (
-                <p style={{ marginTop: "1rem" }}>This is your product.</p>
+                <p style={{marginTop: "1rem"}}>This is your product.</p>
             )}
 
             {!session && (
-                <p style={{ marginTop: "1rem" }}>You must log in to reserve this product.</p>
+                <p style={{marginTop: "1rem"}}>You must log in to reserve this product.</p>
             )}
         </div>
     );

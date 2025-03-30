@@ -8,12 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  email         String        @unique
-  name          String?
-  password      String
-  products      Product[]
-  reservations  Reservation[]
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  email          String          @unique
+  password       String
+  name           String?
+
+  buyerRooms     MessageRoom[]   @relation("BuyerRooms")
+  sellerRooms    MessageRoom[]   @relation("SellerRooms")
+
+  messages       Message[]       @relation("UserMessages")
+
+  products       Product[]
+  reservations   Reservation[]
 }
 
 model Product {
@@ -40,6 +46,35 @@ model Reservation {
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @db.ObjectId
   createdAt  DateTime @default(now())
+}
+
+model MessageRoom {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  productId String     @db.ObjectId
+
+  buyerId   String
+  buyer     User       @relation("BuyerRooms", fields: [buyerId], references: [id])
+
+  sellerId  String
+  seller    User       @relation("SellerRooms", fields: [sellerId], references: [id])
+
+  messages  Message[]  @relation("RoomMessages")
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Message {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+
+  roomId    String
+  room      MessageRoom  @relation("RoomMessages", fields: [roomId], references: [id])
+
+  senderId  String
+  sender    User         @relation("UserMessages", fields: [senderId], references: [id])
+
+  content   String
+  createdAt DateTime     @default(now())
 }
 
 enum ProductStatus {

@@ -8,6 +8,7 @@ import {
   Location,
   Prisma,
 } from "@prisma/client";
+import {ProductWithUserAndReservations} from "@/types/extendProduct";
 
 export function getProducts(queryObject: any) {
   const where: Prisma.ProductWhereInput = {};
@@ -32,47 +33,27 @@ export function getProducts(queryObject: any) {
   });
 }
 
-export function getProductById(id: string): Promise<
-  | (Product & {
-      user: User;
-      reservations: Reservation[];
-    })
-  | null
-> {
+export function getProductById(id: string): Promise<ProductWithUserAndReservations | null> {
   return prisma.product.findUnique({
     where: { id },
+    include: {
+      user: true,
+      reservations: true
+    },
+  });
+}
+
+
+export function getProductByUserId(userId: string): Promise<Product[]> {
+  return prisma.product.findMany({
+    where: { userId },
     include: {
       user: true,
     },
   });
 }
 
-export function getProductByUserId(userId: string): Promise<Product[]> {
-  try {
-    return prisma.product.findMany({
-      where: { userId },
-      include: {
-        user: true,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    return [];
-  }
-}
-
-export function createProduct(data: {
-  title: string;
-  description: string;
-  price: number;
-  image?: string;
-  imageName?: string;
-  userId: string;
-  category: ProductCategory;
-  location: Location;
-  keywords: string[];
-  status: ProductStatus;
-}) {
+export function createProduct(data: Prisma.ProductCreateInput) {
   return prisma.product.create({ data });
 }
 

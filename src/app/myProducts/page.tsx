@@ -1,11 +1,17 @@
-import { getProductByUserId } from "@/lib/db/product.db";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/authOptions";
-import ProductList from "../components/product/ProductList";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { getProductByUserId } from "@/lib/db/product.db";
+import ProductList from "@/app/components/product/ProductList";
 
-export default async function myProducts() {
+export default async function MyProductsPage() {
   const session = await getServerSession(authOptions);
-  const products = await getProductByUserId(session?.user?.["id"]);
+
+  if (!session?.user?.id) {
+    return redirect("/login");
+  }
+
+  const products = await getProductByUserId(session.user.id);
 
   return <ProductList products={products} isMyProducts={true} />;
 }

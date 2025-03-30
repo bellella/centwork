@@ -8,18 +8,19 @@ import {
   MenuItem,
   Chip,
 } from "@mui/material";
-import { ProductCategory, ProductStatus, Location } from "@prisma/client";
+import {ProductCategory, ProductStatus, Location, User, Reservation} from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {ProductWithUserAndReservations} from "@/types/extendProduct";
 
 export default function EditProductPage({
   productDetails,
 }: {
-  productDetails: Product;
+  productDetails: ProductWithUserAndReservations
 }) {
   const router = useRouter();
   const [keywordInput, setKeywordInput] = useState("");
-  const [product, setProduct] = useState<Product>(productDetails);
+  const [product, setProduct] = useState<ProductWithUserAndReservations>(productDetails);
 
   const handleSubmit = async () => {
     const res = await fetch(`/api/myProducts/edit`, {
