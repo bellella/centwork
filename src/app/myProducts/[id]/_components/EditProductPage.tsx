@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   TextField,
   Button,
@@ -10,34 +8,53 @@ import {
   MenuItem,
   Chip,
 } from "@mui/material";
-import { ProductCategory, Location } from "@prisma/client";
+import {ProductCategory, ProductStatus, Location, User, Reservation} from "@prisma/client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {ProductWithUserAndReservations} from "@/types/extendProduct";
 
-export default function NewProductPage() {
-  const [keywordInput, setKeywordInput] = useState("");
-  const [product, setProduct] = useState({
-    title: "",
-    description: "",
-    price: 0,
-    image: "",
-    category: ProductCategory.OTHER,
-    location: Location.TORONTO,
-    keywords: [],
-  } as Product);
-
+export default function EditProductPage({
+  productDetails,
+}: {
+  productDetails: ProductWithUserAndReservations
+}) {
   const router = useRouter();
+  const [keywordInput, setKeywordInput] = useState("");
+  const [product, setProduct] = useState<ProductWithUserAndReservations>(productDetails);
 
   const handleSubmit = async () => {
-    const res = await fetch("/api/products/create", {
-      method: "POST",
+    const res = await fetch(`/api/myProducts/edit`, {
+      method: "PUT",
       body: JSON.stringify(product),
     });
 
     const data = await res.json();
     if (res.ok) {
-      alert("Product created successfully");
-      router.push("/");
+      alert("Product updated");
+      router.push("/myProducts");
     } else {
-      alert(data.error || "Failed to create product");
+      alert(data.error || "Failed to update product");
+    }
+  };
+
+  const confirmDelete = () => {
+    if (confirm("Are you sure you want to delete this product?")) {
+      handleDelete();
+    }
+  };
+
+  const handleDelete = async () => {
+    const res = await fetch(`/api/myProducts/edit`, {
+      method: "DELETE",
+      body: JSON.stringify({ id: product.id }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Product deleted");
+      router.push("/myProducts");
+    } else {
+      alert(data.error || "Failed to delete product");
     }
   };
 
@@ -50,42 +67,56 @@ export default function NewProductPage() {
       py={4}
     >
       <Typography variant="h4" gutterBottom>
-        New Product
+        Edit Product
       </Typography>
+
       <TextField
         label="Title"
-        value={product.title}
+        value={product?.title}
         onChange={(e) => setProduct({ ...product, title: e.target.value })}
         fullWidth
         margin="normal"
-        required
       />
       <TextField
         label="Description"
-        value={product.description}
+        value={product?.description}
         onChange={(e) =>
           setProduct({ ...product, description: e.target.value })
         }
         fullWidth
         margin="normal"
-        multiline
-        required
       />
       <TextField
         label="Price"
-        type="number"
-        value={product.price}
+        value={product?.price}
         onChange={(e) =>
           setProduct({ ...product, price: parseInt(e.target.value) })
         }
         fullWidth
         margin="normal"
-        required
       />
+
+      <TextField
+        select
+        label="Status"
+        value={product?.status}
+        onChange={(e) =>
+          setProduct({ ...product, status: e.target.value as ProductStatus })
+        }
+        fullWidth
+        margin="normal"
+      >
+        {Object.values(ProductStatus).map((status) => (
+          <MenuItem key={status} value={status}>
+            {status}
+          </MenuItem>
+        ))}
+      </TextField>
+
       <TextField
         select
         label="Category"
-        value={product.category}
+        value={product?.category}
         onChange={(e) =>
           setProduct({
             ...product,
@@ -94,7 +125,6 @@ export default function NewProductPage() {
         }
         fullWidth
         margin="normal"
-        required
       >
         {Object.values(ProductCategory).map((category) => (
           <MenuItem key={category} value={category}>
@@ -105,13 +135,12 @@ export default function NewProductPage() {
       <TextField
         select
         label="Location"
-        value={product.location}
+        value={product?.location}
         onChange={(e) =>
           setProduct({ ...product, location: e.target.value as Location })
         }
         fullWidth
         margin="normal"
-        required
       >
         {Object.values(Location).map((location) => (
           <MenuItem key={location} value={location}>
@@ -119,15 +148,13 @@ export default function NewProductPage() {
           </MenuItem>
         ))}
       </TextField>
-
       <TextField
         label="Image URL"
-        value={product.image}
+        value={product?.image}
         onChange={(e) => setProduct({ ...product, image: e.target.value })}
         fullWidth
         margin="normal"
       />
-
       <TextField
         label="Keywords"
         value={keywordInput}
@@ -142,6 +169,7 @@ export default function NewProductPage() {
           }
         }}
         fullWidth
+        margin="normal"
         placeholder="Press Enter to add keyword"
         sx={{ mt: 2, mb: 2 }}
       />
@@ -151,8 +179,6 @@ export default function NewProductPage() {
         gap={2}
         justifyContent="start"
         width="100%"
-        mt={product.keywords.length > 0 ? 1 : 0}
-        mb={product.keywords.length > 0 ? 2 : 0}
       >
         {product.keywords.map((keyword) => (
           <Chip
@@ -167,10 +193,17 @@ export default function NewProductPage() {
           />
         ))}
       </Box>
-
-      <Box display="flex" justifyContent="flex-end" width="100%">
+      <Box display="flex" justifyContent="flex-end" width="100%" gap={4}>
+        <Button
+          variant="contained"
+          onClick={confirmDelete}
+          sx={{ mt: 2 }}
+          color="error"
+        >
+          Delete
+        </Button>
         <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
-          Create
+          Update
         </Button>
       </Box>
     </Box>
@@ -178,11 +211,13 @@ export default function NewProductPage() {
 }
 
 type Product = {
+  id: string;
   title: string;
   description: string;
   price: number;
   image: string;
   category: ProductCategory;
+  status: ProductStatus;
   location: Location;
   keywords: string[];
 };

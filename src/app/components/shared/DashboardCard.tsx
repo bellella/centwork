@@ -1,5 +1,14 @@
 import React from "react";
-import { Card, CardContent, Typography, Stack, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Stack,
+  Box,
+  Button,
+} from "@mui/material";
+import { useRouter } from "next/navigation";
+import { IconRefresh } from "@tabler/icons-react";
 
 type Props = {
   title?: string;
@@ -24,6 +33,8 @@ const DashboardCard = ({
   headsubtitle,
   middlecontent,
 }: Props) => {
+  const router = useRouter();
+
   return (
     <Card sx={{ padding: 0 }} elevation={9} variant={undefined}>
       {cardheading ? (
@@ -54,6 +65,9 @@ const DashboardCard = ({
                   ""
                 )}
               </Box>
+              <Button variant="contained" onClick={() => router.refresh()}>
+                <IconRefresh />
+              </Button>
               {action}
             </Stack>
           ) : null}
