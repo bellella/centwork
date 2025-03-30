@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   TextField,
@@ -13,23 +13,55 @@ import {
 import { ProductCategory, Location } from "@prisma/client";
 
 export default function NewProductPage() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [keywordInput, setKeywordInput] = useState("");
   const [product, setProduct] = useState({
     title: "",
     description: "",
     price: 0,
     image: "",
+    imageName: "",
     category: ProductCategory.OTHER,
     location: Location.TORONTO,
     keywords: [],
   } as Product);
+  const [file, setFile] = useState<File | null>(null);
 
   const router = useRouter();
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFile(file);
+      setProduct({ ...product, imageName: file?.name });
+    }
+  };
+
   const handleSubmit = async () => {
+    let image = "";
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadResponse = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (uploadResponse.ok) {
+        const uploadData = await uploadResponse.json();
+        image = uploadData.filePath;
+      } else {
+        alert("Failed to upload image");
+        return;
+      }
+    }
+
     const res = await fetch("/api/products/create", {
       method: "POST",
-      body: JSON.stringify(product),
+      body: JSON.stringify({ ...product, image }),
     });
 
     const data = await res.json();
@@ -121,14 +153,6 @@ export default function NewProductPage() {
       </TextField>
 
       <TextField
-        label="Image URL"
-        value={product.image}
-        onChange={(e) => setProduct({ ...product, image: e.target.value })}
-        fullWidth
-        margin="normal"
-      />
-
-      <TextField
         label="Keywords"
         value={keywordInput}
         onChange={(e) => setKeywordInput(e.target.value)}
@@ -145,6 +169,7 @@ export default function NewProductPage() {
         placeholder="Press Enter to add keyword"
         sx={{ mt: 2, mb: 2 }}
       />
+
       <Box
         display="flex"
         flexWrap="wrap"
@@ -168,6 +193,18 @@ export default function NewProductPage() {
         ))}
       </Box>
 
+      {product.imageName && <Typography mb={1}>{product.imageName}</Typography>}
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+      <Button variant="contained" onClick={() => fileInputRef.current?.click()}>
+        Upload Image
+      </Button>
+
       <Box display="flex" justifyContent="flex-end" width="100%">
         <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
           Create
@@ -182,6 +219,7 @@ type Product = {
   description: string;
   price: number;
   image: string;
+  imageName: string;
   category: ProductCategory;
   location: Location;
   keywords: string[];

@@ -66,6 +66,7 @@ export function createProduct(data: {
   description: string;
   price: number;
   image?: string;
+  imageName?: string;
   userId: string;
   category: ProductCategory;
   location: Location;
