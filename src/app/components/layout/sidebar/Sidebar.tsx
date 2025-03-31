@@ -1,6 +1,9 @@
-import { useMediaQuery, Box, Drawer } from "@mui/material";
-import SidebarItems from "./SidebarItems";
+import { useMediaQuery, Box, Drawer } from '@mui/material';
+import SidebarItems from './SidebarItems';
 import { Sidebar, Logo } from 'react-mui-sidebar';
+import Image from 'next/image';
+import CentennailLogo from '/public/images/logos/CentennialMarket.png';
+import React from 'react';
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
@@ -8,27 +11,21 @@ interface ItemType {
   isSidebarOpen: boolean;
 }
 
-const MSidebar = ({
-  isMobileSidebarOpen,
-  onSidebarClose,
-  isSidebarOpen,
-}: ItemType) => {
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
+const MSidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }: ItemType) => {
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
-  const sidebarWidth = "270px";
+  const sidebarWidth = '270px';
 
   // Custom CSS for short scrollbar
   const scrollbarStyles = {
     '&::-webkit-scrollbar': {
       width: '7px',
-
     },
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: '#eff2f7',
       borderRadius: '15px',
     },
   };
-
 
   if (lgUp) {
     return (
@@ -47,7 +44,7 @@ const MSidebar = ({
           variant="permanent"
           PaperProps={{
             sx: {
-              boxSizing: "border-box",
+              boxSizing: 'border-box',
               ...scrollbarStyles,
             },
           }}
@@ -57,7 +54,7 @@ const MSidebar = ({
           {/* ------------------------------------------- */}
           <Box
             sx={{
-              height: "100%",
+              height: '100%',
             }}
           >
             <Sidebar
@@ -71,14 +68,23 @@ const MSidebar = ({
               {/* ------------------------------------------- */}
               {/* Logo */}
               {/* ------------------------------------------- */}
-              <Logo img="/images/logos/dark-logo.svg" />
+              <Image
+                src={CentennailLogo}
+                alt="Centennial Market"
+                priority
+                style={{
+                  width: 'auto',
+                  height: 'auto',
+                  padding: '1em 0 0 .5em',
+                }}
+              />
               <Box>
                 {/* ------------------------------------------- */}
                 {/* Sidebar Items */}
                 {/* ------------------------------------------- */}
                 <SidebarItems />
               </Box>
-            </Sidebar >
+            </Sidebar>
           </Box>
         </Drawer>
       </Box>
@@ -115,7 +121,16 @@ const MSidebar = ({
           {/* ------------------------------------------- */}
           {/* Logo */}
           {/* ------------------------------------------- */}
-          <Logo img="/images/logos/dark-logo.svg" />
+          <Image
+            src={CentennailLogo}
+            alt="Centennial Market"
+            priority
+            style={{
+              width: 'auto',
+              height: 'auto',
+              padding: '1em 0 0 .5em',
+            }}
+          />
           {/* ------------------------------------------- */}
           {/* Sidebar Items */}
           {/* ------------------------------------------- */}
@@ -125,14 +140,8 @@ const MSidebar = ({
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}
       {/* ------------------------------------------- */}
-
     </Drawer>
   );
 };
 
 export default MSidebar;
-
-
-
-
-
