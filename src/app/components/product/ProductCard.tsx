@@ -12,11 +12,7 @@ export default function ProductCard({
 }) {
   return (
     <Link
-      href={
-        isMyProducts
-          ? `/src/app/(main)/myProducts/${product.id}`
-          : `/src/app/(main)/products/${product.id}`
-      }
+      href={isMyProducts ? `/myProducts/${product.id}` : `/products/${product.id}`}
       style={{ textDecoration: 'none', color: 'inherit' }}
     >
       <BlankCard>

@@ -16,7 +16,7 @@ export default function MessageItem({
 }: MessageItemProps) {
   return (
     <Link
-      href={`/src/app/(main)/messages/${roomId}`}
+      href={`/messages/${roomId}`}
       style={{
         textDecoration: 'none',
         color: 'inherit',
