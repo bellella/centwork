@@ -52,7 +52,7 @@ export default function NewProductPage() {
 
       if (uploadResponse.ok) {
         const uploadData = await uploadResponse.json();
-        image = uploadData.filePath;
+        image = uploadData.fileUrl;
       } else {
         alert("Failed to upload image");
         return;
