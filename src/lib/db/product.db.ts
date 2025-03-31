@@ -64,6 +64,7 @@ export function updateProduct(
     description: string;
     price: number;
     image?: string;
+    imageName?: string;
     status: ProductStatus;
     category: ProductCategory;
     location: Location;
