@@ -1,75 +1,99 @@
-"use client";
+'use client';
 
-import {
-  TextField,
-  Button,
-  Box,
-  Typography,
-  MenuItem,
-  Chip,
-} from "@mui/material";
-import {ProductCategory, ProductStatus, Location, User, Reservation} from "@prisma/client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import {ProductWithUserAndReservations} from "@/types/extendProduct";
+import { TextField, Button, Box, Typography, MenuItem, Chip } from '@mui/material';
+import Image from 'next/image';
+import { ProductCategory, ProductStatus, Location } from '@prisma/client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ProductWithUserAndReservations } from '@/types/extendProduct';
 
 export default function EditProductPage({
   productDetails,
 }: {
-  productDetails: ProductWithUserAndReservations
+  productDetails: ProductWithUserAndReservations;
 }) {
   const router = useRouter();
-  const [keywordInput, setKeywordInput] = useState("");
+  const [keywordInput, setKeywordInput] = useState('');
   const [product, setProduct] = useState<ProductWithUserAndReservations>(productDetails);
+
+  const handleChangeImage = async () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (uploadResponse.ok) {
+          const uploadData = await uploadResponse.json();
+          setProduct({ ...product, image: uploadData.fileUrl, imageName: file.name });
+        } else {
+          alert('Failed to upload image');
+        }
+      }
+    };
+    fileInput.click();
+  };
 
   const handleSubmit = async () => {
     const res = await fetch(`/api/myProducts/edit`, {
-      method: "PUT",
+      method: 'PUT',
       body: JSON.stringify(product),
     });
 
     const data = await res.json();
     if (res.ok) {
-      alert("Product updated");
-      router.push("/myProducts");
+      alert('Product updated');
+      router.push('/myProducts');
     } else {
-      alert(data.error || "Failed to update product");
+      alert(data.error || 'Failed to update product');
     }
   };
 
   const confirmDelete = () => {
-    if (confirm("Are you sure you want to delete this product?")) {
+    if (confirm('Are you sure you want to delete this product?')) {
       handleDelete();
     }
   };
 
   const handleDelete = async () => {
     const res = await fetch(`/api/myProducts/edit`, {
-      method: "DELETE",
+      method: 'DELETE',
       body: JSON.stringify({ id: product.id }),
     });
 
     const data = await res.json();
     if (res.ok) {
-      alert("Product deleted");
-      router.push("/myProducts");
+      alert('Product deleted');
+      router.push('/myProducts');
     } else {
-      alert(data.error || "Failed to delete product");
+      alert(data.error || 'Failed to delete product');
     }
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      px={2}
-      py={4}
-    >
+    <Box display="flex" flexDirection="column" alignItems="center" px={2} py={4}>
       <Typography variant="h4" gutterBottom>
         Edit Product
       </Typography>
-
+      <Box height={300} width={'100%'} position={'relative'}>
+        <Image
+          src={product.image || ''}
+          alt={product.title || 'Product image'}
+          fill
+          objectFit="contain"
+          priority={false}
+        />
+      </Box>
+      <Button variant="contained" onClick={handleChangeImage}>
+        Change Image
+      </Button>
       <TextField
         label="Title"
         value={product?.title}
@@ -80,29 +104,22 @@ export default function EditProductPage({
       <TextField
         label="Description"
         value={product?.description}
-        onChange={(e) =>
-          setProduct({ ...product, description: e.target.value })
-        }
+        onChange={(e) => setProduct({ ...product, description: e.target.value })}
         fullWidth
         margin="normal"
       />
       <TextField
         label="Price"
         value={product?.price}
-        onChange={(e) =>
-          setProduct({ ...product, price: parseInt(e.target.value) })
-        }
+        onChange={(e) => setProduct({ ...product, price: parseInt(e.target.value) })}
         fullWidth
         margin="normal"
       />
-
       <TextField
         select
         label="Status"
         value={product?.status}
-        onChange={(e) =>
-          setProduct({ ...product, status: e.target.value as ProductStatus })
-        }
+        onChange={(e) => setProduct({ ...product, status: e.target.value as ProductStatus })}
         fullWidth
         margin="normal"
       >
@@ -112,7 +129,6 @@ export default function EditProductPage({
           </MenuItem>
         ))}
       </TextField>
-
       <TextField
         select
         label="Category"
@@ -136,9 +152,7 @@ export default function EditProductPage({
         select
         label="Location"
         value={product?.location}
-        onChange={(e) =>
-          setProduct({ ...product, location: e.target.value as Location })
-        }
+        onChange={(e) => setProduct({ ...product, location: e.target.value as Location })}
         fullWidth
         margin="normal"
       >
@@ -149,23 +163,16 @@ export default function EditProductPage({
         ))}
       </TextField>
       <TextField
-        label="Image URL"
-        value={product?.image}
-        onChange={(e) => setProduct({ ...product, image: e.target.value })}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
         label="Keywords"
         value={keywordInput}
         onChange={(e) => setKeywordInput(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === 'Enter') {
             setProduct({
               ...product,
               keywords: [...product.keywords, keywordInput],
             });
-            setKeywordInput("");
+            setKeywordInput('');
           }
         }}
         fullWidth
@@ -173,13 +180,7 @@ export default function EditProductPage({
         placeholder="Press Enter to add keyword"
         sx={{ mt: 2, mb: 2 }}
       />
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        gap={2}
-        justifyContent="start"
-        width="100%"
-      >
+      <Box display="flex" flexWrap="wrap" gap={2} justifyContent="start" width="100%">
         {product.keywords.map((keyword) => (
           <Chip
             key={keyword}
@@ -194,12 +195,7 @@ export default function EditProductPage({
         ))}
       </Box>
       <Box display="flex" justifyContent="flex-end" width="100%" gap={4}>
-        <Button
-          variant="contained"
-          onClick={confirmDelete}
-          sx={{ mt: 2 }}
-          color="error"
-        >
+        <Button variant="contained" onClick={confirmDelete} sx={{ mt: 2 }} color="error">
           Delete
         </Button>
         <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
@@ -209,15 +205,3 @@ export default function EditProductPage({
     </Box>
   );
 }
-
-type Product = {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  category: ProductCategory;
-  status: ProductStatus;
-  location: Location;
-  keywords: string[];
-};
