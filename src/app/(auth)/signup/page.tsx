@@ -3,10 +3,11 @@
 import { SetStateAction, useState } from 'react';
 import { Box, Grid, Card, Stack, Typography, Button } from '@mui/material';
 import PageContainer from '@/app/components/container/PageContainer';
-import Logo from '@/app/components/layout/shared/logo/Logo';
 import CustomTextField from '@/app/components/forms/theme-elements/CustomTextField';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import CentennailLogo from '/public/images/logos/CentennialMarket.png';
+import Image from 'next/image';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -15,6 +16,16 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('');
 
   const handleSignup = async () => {
+    if (!name || !email || !password) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    if (!checkCentennialEmail(email)) {
+      alert('Please use a valid Centennial College email address.');
+      return;
+    }
+
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       body: JSON.stringify({ name, email, password }),
@@ -27,6 +38,14 @@ export default function SignUpPage() {
     } else {
       alert(data.error || 'Sign up failed.');
     }
+  };
+
+  const checkCentennialEmail = (email: string) => {
+    return email.endsWith('@my.centennialcollege.ca') || email.endsWith('@centennialcollege.ca');
+  };
+
+  const toHomePage = () => {
+    router.push('/');
   };
 
   return (
@@ -59,7 +78,12 @@ export default function SignUpPage() {
           >
             <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px' }}>
               <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-                <Logo />
+                <Image
+                  src={CentennailLogo}
+                  alt="Centennial Market Logo"
+                  onClick={toHomePage}
+                  style={{ cursor: 'pointer' }}
+                />
               </Box>
 
               <Typography fontWeight="700" variant="h4" mb={1}>

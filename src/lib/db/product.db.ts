@@ -1,21 +1,15 @@
-import prisma from "./prisma";
-import {
-  Product,
-  Reservation,
-  User,
-  ProductCategory,
-  ProductStatus,
-  Location,
-  Prisma,
-} from "@prisma/client";
-import {ProductWithUserAndReservations} from "@/types/extendProduct";
+import prisma from './prisma';
+import { Product, ProductCategory, ProductStatus, Location, Prisma } from '@prisma/client';
+import { ProductWithUserAndReservations } from '@/types/extendProduct';
 
 export function getProducts(queryObject: any) {
-  const where: Prisma.ProductWhereInput = {};
+  const where: Prisma.ProductWhereInput = {
+    status: ProductStatus.AVAILABLE,
+  };
   if (queryObject?.keyword) {
     where.OR = [
-      { title: { contains: queryObject.keyword, mode: "insensitive" } },
-      { description: { contains: queryObject.keyword, mode: "insensitive" } },
+      { title: { contains: queryObject.keyword, mode: 'insensitive' } },
+      { description: { contains: queryObject.keyword, mode: 'insensitive' } },
     ];
   }
 
@@ -29,7 +23,7 @@ export function getProducts(queryObject: any) {
 
   return prisma.product.findMany({
     where,
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
   });
 }
 
@@ -38,11 +32,10 @@ export function getProductById(id: string): Promise<ProductWithUserAndReservatio
     where: { id },
     include: {
       user: true,
-      reservations: true
+      reservations: true,
     },
   });
 }
-
 
 export function getProductByUserId(userId: string): Promise<Product[]> {
   return prisma.product.findMany({
