@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import PageContainer from '@/app/components/container/PageContainer';
-import Logo from '@/app/components/layout/shared/logo/Logo';
+import CentennailLogo from '/public/images/logos/CentennialMarket.png';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,6 +26,10 @@ export default function LoginPage() {
     } else {
       alert('Login failed. Please check your email and password.');
     }
+  };
+
+  const toHomePage = () => {
+    router.push('/');
   };
 
   return (
@@ -57,7 +62,12 @@ export default function LoginPage() {
           >
             <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px' }}>
               <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-                <Logo />
+                <Image
+                  src={CentennailLogo}
+                  alt="Centennial Market Logo"
+                  onClick={toHomePage}
+                  style={{ cursor: 'pointer' }}
+                />
               </Box>
 
               <Typography variant="h5" textAlign="center" mb={1} fontWeight={600}>
