@@ -5,8 +5,9 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { Box, TextField, Button, Typography, Stack, Paper } from '@mui/material';
 import ProductDetail from '@/app/components/messages/ProductDetail';
-import { Product, MessageRoom } from '@prisma/client';
+import { MessageRoom } from '@prisma/client';
 import { getProduct, getRoomInfo } from '@/app/_actions/getProduct';
+import { ExtendedProduct } from '@/types/extendProduct';
 
 interface Message {
   id: string;
@@ -22,7 +23,7 @@ export default function MessageRoomPage() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ExtendedProduct | null>(null);
   const [roomInfo, setRoomInfo] = useState<MessageRoom | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -71,7 +72,7 @@ export default function MessageRoomPage() {
 
   return (
     <Box p={3} height="80vh" display="flex" flexDirection="column">
-      <ProductDetail product={product} roomInfo={roomInfo} />
+      <ProductDetail product={product} roomInfo={roomInfo!} />
 
       <Typography variant="h5" mb={2}>
         Chat
