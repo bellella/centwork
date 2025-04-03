@@ -1,5 +1,6 @@
+'use client';
+
 import { useState } from 'react';
-import { Product } from '@prisma/client';
 import Box from '@mui/material/Box';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
@@ -11,21 +12,22 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { ProductStatus, MessageRoom } from '@prisma/client';
 import { updateProductStatus } from '@/app/_actions/getProduct';
+import { ExtendedProduct } from '@/types/extendProduct';
 
 export default function ProductDetail({
   product,
   roomInfo,
 }: {
-  product: Product | null;
-  roomInfo: MessageRoom | null;
+  product: ExtendedProduct | null;
+  roomInfo: MessageRoom;
 }) {
-  if (!product) {
-    return null;
-  }
-
   const router = useRouter();
   const [noImage, setNoImage] = useState(false);
   const { data: session } = useSession();
+
+  if (!product) {
+    return null;
+  }
 
   const isReservedByUser = product.reservations.some(
     (reservation) => reservation.userId === roomInfo?.buyerId
@@ -38,7 +40,7 @@ export default function ProductDetail({
   const handleStatusChange = async (event: SelectChangeEvent<string>) => {
     const status = event.target.value as ProductStatus;
 
-    const { success } = await updateProductStatus(product.id, status, roomInfo?.buyerId);
+    const { success } = await updateProductStatus(product.id, status, roomInfo.buyerId);
     if (success) {
       alert('Product status updated successfully');
       router.refresh();

@@ -1,9 +1,10 @@
 'use server';
 
 import prisma from '@/lib/db/prisma';
-import { MessageRoom, Product, ProductStatus } from '@prisma/client';
+import { MessageRoom, ProductStatus } from '@prisma/client';
+import { ExtendedProduct } from '@/types/extendProduct';
 
-export async function getProduct(roomId: string): Promise<Product | null> {
+export async function getProduct(roomId: string): Promise<ExtendedProduct | null> {
   const productWithRoom = await prisma.messageRoom.findUnique({
     where: {
       id: roomId, // your room ID
