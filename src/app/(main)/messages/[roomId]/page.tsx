@@ -5,8 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { Box, TextField, Button, Typography, Stack, Paper } from '@mui/material';
 import ProductDetail from '@/app/components/messages/ProductDetail';
-import { Product } from '@prisma/client';
-import { getProduct } from '@/app/_actions/getProduct';
+import { Product, MessageRoom } from '@prisma/client';
+import { getProduct, getRoomInfo } from '@/app/_actions/getProduct';
 
 interface Message {
   id: string;
@@ -23,6 +23,7 @@ export default function MessageRoomPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [product, setProduct] = useState<Product | null>(null);
+  const [roomInfo, setRoomInfo] = useState<MessageRoom | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Polling: 3초마다 메시지 가져오기
@@ -38,8 +39,15 @@ export default function MessageRoomPage() {
       setProduct(data);
     };
 
+    const fetchRoomInfo = async () => {
+      const data = await getRoomInfo(roomId);
+      setRoomInfo(data);
+    };
+
     fetchMessages();
     fetchProduct();
+    fetchRoomInfo();
+
     const interval = setInterval(fetchMessages, 3000);
     return () => clearInterval(interval);
   }, [roomId]);
@@ -63,7 +71,7 @@ export default function MessageRoomPage() {
 
   return (
     <Box p={3} height="80vh" display="flex" flexDirection="column">
-      <ProductDetail product={product} />
+      <ProductDetail product={product} roomInfo={roomInfo} />
 
       <Typography variant="h5" mb={2}>
         Chat
