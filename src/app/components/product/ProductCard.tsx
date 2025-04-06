@@ -2,13 +2,16 @@ import { Product } from '@prisma/client';
 import Link from 'next/link';
 import { Avatar, CardContent, Rating, Stack, Typography } from '@mui/material';
 import BlankCard from '../shared/BlankCard';
+import moment from 'moment';
 
 export default function ProductCard({
   product,
   isMyProducts,
+  transactionDate,
 }: {
   product: Product;
   isMyProducts: boolean;
+  transactionDate: Date;
 }) {
   return (
     <Link
@@ -32,6 +35,12 @@ export default function ProductCard({
               readOnly
             /> */}
           </Stack>
+
+          {transactionDate && (
+            <Typography variant="body2" mt={1}>
+              {moment(transactionDate).format('YYYY-MM-DD')}
+            </Typography>
+          )}
         </CardContent>
       </BlankCard>
     </Link>
