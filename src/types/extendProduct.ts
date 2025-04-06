@@ -19,3 +19,11 @@ export type ProductQuery = {
   category: (typeof ProductCategoryWithAll)[number];
   location: (typeof LocationWithAll)[number];
 };
+
+export type ProductWithRating = Product & {
+  transactions: Transaction[];
+};
+
+export type TransactionWithProduct = Transaction & {
+  product: Product;
+};

@@ -34,10 +34,15 @@ export default function ChatStartButton({
     }
   };
 
-  if (!session || session.user.id === sellerId) return null; // 본인이거나 비로그인 → 버튼 X
+  if (session?.user?.id === sellerId) return null; // 본인이거나 비로그인 → 버튼 X
 
   return (
-    <Button variant="outlined" onClick={handleStartChat} disabled={loading} sx={{ mt: 2 }}>
+    <Button
+      variant="outlined"
+      onClick={handleStartChat}
+      disabled={loading || !session}
+      sx={{ mt: 2 }}
+    >
       {loading ? 'Starting chat...' : '💬 Chat with Seller'}
     </Button>
   );
