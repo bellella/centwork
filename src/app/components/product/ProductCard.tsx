@@ -11,7 +11,7 @@ export default function ProductCard({
 }: {
   product: Product;
   isMyProducts: boolean;
-  transactionDate: Date;
+  transactionDate?: Date;
 }) {
   return (
     <Link
