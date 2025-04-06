@@ -13,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { ProductStatus, MessageRoom } from '@prisma/client';
 import { updateProductStatus } from '@/app/_actions/getProduct';
 import { ExtendedProduct } from '@/types/extendProduct';
+import Chip from '@mui/material/Chip';
 
 export default function ProductDetail({
   product,
@@ -91,7 +92,8 @@ export default function ProductDetail({
       </Box>
 
       <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
-        {session?.user?.id === product.userId && (
+        {product.status === ProductStatus.SOLD && <Chip label="Sold" color="error" />}
+        {session?.user?.id === product.userId && product.status !== ProductStatus.SOLD && (
           <>
             <Typography variant="body2">Update product for this user: </Typography>
             <FormControl size="small" sx={{ width: 200 }}>

@@ -36,14 +36,14 @@ export async function getRoomInfo(roomId: string): Promise<MessageRoom | null> {
 export async function updateProductStatus(
   productId: string,
   status: ProductStatus,
-  userId: string
+  buyerId: string
 ) {
   try {
     if (status === ProductStatus.SOLD) {
       await prisma.transaction.create({
         data: {
           productId,
-          userId,
+          userId: buyerId,
         },
       });
     }
@@ -52,7 +52,7 @@ export async function updateProductStatus(
       await prisma.reservation.create({
         data: {
           productId,
-          userId,
+          userId: buyerId,
         },
       });
     }

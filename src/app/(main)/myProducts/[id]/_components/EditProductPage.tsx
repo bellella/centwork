@@ -62,6 +62,8 @@ export default function EditProductPage({
     }
   };
 
+  const isSold = product.status === ProductStatus.SOLD;
+
   const handleDelete = async () => {
     const res = await fetch(`/api/myProducts/edit`, {
       method: 'DELETE',
@@ -79,9 +81,15 @@ export default function EditProductPage({
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" px={2} py={4}>
-      <Typography variant="h4" gutterBottom>
-        Edit Product
-      </Typography>
+      {isSold ? (
+        <Typography variant="h4" gutterBottom color="error">
+          Product Sold
+        </Typography>
+      ) : (
+        <Typography variant="h4" gutterBottom>
+          Edit Product
+        </Typography>
+      )}
       <Box height={300} width={'100%'} position={'relative'}>
         <Image
           src={product.image || ''}
@@ -91,7 +99,7 @@ export default function EditProductPage({
           priority={false}
         />
       </Box>
-      <Button variant="contained" onClick={handleChangeImage}>
+      <Button variant="contained" onClick={handleChangeImage} disabled={isSold}>
         Change Image
       </Button>
       <TextField
@@ -100,6 +108,7 @@ export default function EditProductPage({
         onChange={(e) => setProduct({ ...product, title: e.target.value })}
         fullWidth
         margin="normal"
+        disabled={isSold}
       />
       <TextField
         label="Description"
@@ -107,6 +116,7 @@ export default function EditProductPage({
         onChange={(e) => setProduct({ ...product, description: e.target.value })}
         fullWidth
         margin="normal"
+        disabled={isSold}
       />
       <TextField
         label="Price"
@@ -114,6 +124,7 @@ export default function EditProductPage({
         onChange={(e) => setProduct({ ...product, price: parseInt(e.target.value) })}
         fullWidth
         margin="normal"
+        disabled={isSold}
       />
       <TextField
         select
@@ -122,6 +133,7 @@ export default function EditProductPage({
         onChange={(e) => setProduct({ ...product, status: e.target.value as ProductStatus })}
         fullWidth
         margin="normal"
+        disabled={isSold}
       >
         {Object.values(ProductStatus).map((status) => (
           <MenuItem key={status} value={status}>
@@ -141,6 +153,7 @@ export default function EditProductPage({
         }
         fullWidth
         margin="normal"
+        disabled={isSold}
       >
         {Object.values(ProductCategory).map((category) => (
           <MenuItem key={category} value={category}>
@@ -155,6 +168,7 @@ export default function EditProductPage({
         onChange={(e) => setProduct({ ...product, location: e.target.value as Location })}
         fullWidth
         margin="normal"
+        disabled={isSold}
       >
         {Object.values(Location).map((location) => (
           <MenuItem key={location} value={location}>
@@ -179,12 +193,14 @@ export default function EditProductPage({
         margin="normal"
         placeholder="Press Enter to add keyword"
         sx={{ mt: 2, mb: 2 }}
+        disabled={isSold}
       />
       <Box display="flex" flexWrap="wrap" gap={2} justifyContent="start" width="100%">
         {product.keywords.map((keyword) => (
           <Chip
             key={keyword}
             label={keyword}
+            disabled={isSold}
             onDelete={() =>
               setProduct({
                 ...product,
@@ -195,10 +211,16 @@ export default function EditProductPage({
         ))}
       </Box>
       <Box display="flex" justifyContent="flex-end" width="100%" gap={4}>
-        <Button variant="contained" onClick={confirmDelete} sx={{ mt: 2 }} color="error">
+        <Button
+          variant="contained"
+          onClick={confirmDelete}
+          sx={{ mt: 2 }}
+          color="error"
+          disabled={isSold}
+        >
           Delete
         </Button>
-        <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
+        <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }} disabled={isSold}>
           Update
         </Button>
       </Box>
