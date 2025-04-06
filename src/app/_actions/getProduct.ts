@@ -68,3 +68,16 @@ export async function updateProductStatus(
     return { success: false, error: 'Failed to update product status' };
   }
 }
+
+export async function updateTransactionRating(
+  transactionId: string,
+  rating: number,
+  review: string
+) {
+  const transaction = await prisma.transaction.update({
+    where: { id: transactionId },
+    data: { rating, review },
+  });
+
+  return transaction;
+}

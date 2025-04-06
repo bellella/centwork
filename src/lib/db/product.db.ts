@@ -10,6 +10,7 @@ export function getProducts(queryObject: any) {
     where.OR = [
       { title: { contains: queryObject.keyword, mode: 'insensitive' } },
       { description: { contains: queryObject.keyword, mode: 'insensitive' } },
+      { keywords: { has: queryObject.keyword } },
     ];
   }
 

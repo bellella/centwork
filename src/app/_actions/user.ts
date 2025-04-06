@@ -22,3 +22,34 @@ export async function updateUser(updateData: UserUpdateData) {
     return { success: false, error: 'Failed to update user' };
   }
 }
+
+export async function getSellerInfo(id: string) {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      products: {
+        select: {
+          id: true,
+          title: true,
+          price: true,
+          image: true,
+          status: true,
+          transactions: {
+            select: {
+              id: true,
+              createdAt: true,
+              rating: true,
+              review: true,
+              productId: true,
+              userId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return user;
+}
